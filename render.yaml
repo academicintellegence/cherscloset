@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: digital-closet-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: MONGODB_URI
+        sync: false # paste your Atlas connection string in the Render dashboard
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        sync: false # e.g. https://YOUR_GITHUB_USER.github.io
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false # optional; leave empty to disable the AI stylist
+      - key: GEMINI_MODEL
+        value: gemini-2.5-flash
+      - key: AI_GLOBAL_DAILY_CAP
+        value: 200
