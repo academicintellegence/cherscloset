@@ -8,9 +8,9 @@ const schema = z.object({
   JWT_SECRET: z.string().min(16, 'JWT_SECRET must be at least 16 characters'),
   // Comma-separated list of allowed frontend origins (scheme + host, no path).
   CLIENT_ORIGIN: z.string().min(1),
-  CLOUDINARY_CLOUD_NAME: z.string().min(1),
-  CLOUDINARY_API_KEY: z.string().min(1),
-  CLOUDINARY_API_SECRET: z.string().min(1),
+  CLOUDINARY_CLOUD_NAME: z.string().trim().min(1),
+  CLOUDINARY_API_KEY: z.string().trim().min(1),
+  CLOUDINARY_API_SECRET: z.string().trim().min(1),
   // Optional: without a key the app simply uses the rules-based recommender.
   GEMINI_API_KEY: z.string().optional(),
   GEMINI_MODEL: z.string().min(1).default('gemini-2.5-flash'),
