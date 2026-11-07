@@ -55,7 +55,14 @@ router.get('/', async (req, res) => {
 router.post('/', validate(createSchema), async (req, res) => {
   const { publicId, imageUrl } = req.body;
   // The image must be one we signed for this user, otherwise anyone could attach arbitrary URLs.
-  if (!publicId.startsWith(publicIdPrefix(req.userId)) || !imageUrl.startsWith(deliveryPrefix()) || !imageUrl.includes(`/${publicId}`)) {
+  // The cloud name is compared ignoring letter case, and the reason for a rejection is logged (never shown).
+  const checks = {
+    ownFolder: publicId.startsWith(publicIdPrefix(req.userId)),
+    ourCloud: imageUrl.toLowerCase().startsWith(deliveryPrefix().toLowerCase()),
+    matchesId: imageUrl.includes(`/${publicId}`),
+  };
+  if (!checks.ownFolder || !checks.ourCloud || !checks.matchesId) {
+    console.warn('Rejected item image', checks, 'expected prefix', deliveryPrefix(), 'got', imageUrl.slice(0, 80));
     return res.status(400).json({ error: 'Invalid image' });
   }
   if ((await Item.countDocuments({ userId: req.userId })) >= MAX_ITEMS) {
